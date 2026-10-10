@@ -1,0 +1,12 @@
+name: astrbot_plugin_music_recommender
+desc: "为AI提供网易云与QQ音乐搜索工具，支持歌名链接、签名卡片与本地实验卡片。"
+version: 1.0.1
+author: youhe
+repo: https://github.com/Akavilos/astrbot_plugin_music_recommender
+display_name: 音乐推荐 (Music Recommender)
+short_desc: "网易云与QQ音乐搜索及卡片分享"
+tags:
+  - 音乐
+  - 网易云
+  - QQ音乐
+  - 搜索
