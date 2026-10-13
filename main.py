@@ -15,7 +15,7 @@ class MusicCard(MC.Music):
     async def to_dict(self):
         return self.toDict()
 
-@register('astrbot_plugin_music_recommender','Akavilos','音乐搜索与卡片分享','1.1.0')
+@register('astrbot_plugin_music_recommender','Akavilos','音乐搜索与卡片分享','1.1.1')
 class MusicRecommenderPlugin(Star):
     def __init__(self,context:Context,config:AstrBotConfig):
         super().__init__(context)
@@ -35,23 +35,24 @@ class MusicRecommenderPlugin(Star):
     async def terminate(self):
         await self.client.close()
 
-    async def recommend(self,event,keyword,limit=None):
+    async def recommend(self,event,keyword,limit=None,delivery='configured'):
         # 模型工具入口可能传入包装上下文，指令入口传入消息事件。
         if not hasattr(event,'unified_msg_origin'):event=event.context.event
         async def send(card):
             component=MusicCard(payload=card.data) if card.kind=='music' else MC.Json(data=card.data['data'])
             return await event.send(MessageChain(chain=[component]))
-        return await self.service.recommend(keyword,limit,send)
+        return await self.service.recommend(keyword,limit,send,delivery=delivery)
 
     @filter.llm_tool(name='search_music')
-    async def search_music(self,event:AstrMessageEvent,keyword:str,limit:int=0):
-        """我需要查找或推荐歌曲时搜索歌名、歌手或关键词；返回真实歌曲与发送结果。
+    async def search_music(self,event:AstrMessageEvent,keyword:str,limit:int=0,delivery:str='configured'):
+        """我搜索歌曲并向当前会话发送音乐卡片；需要卡片时用delivery=card，只查链接时用link。我以实际回执确认发送。
 
         Args:
             keyword(string): 我用于搜歌的歌名、歌手或关键词。
             limit(number): 我需要的候选数量；0表示沿用默认值。
+            delivery(string): 我需要发卡片时用card，只查询链接时用link；configured沿用设置。
         """
-        return await self.recommend(event,keyword,limit or None)
+        return await self.recommend(event,keyword,limit or None,delivery)
 
     @filter.command('搜歌',alias={'音乐'})
     async def search_command(self,event:AstrMessageEvent):

@@ -22,10 +22,10 @@
     "invisible": true
   },
   "send_mode": {
-    "description": "歌曲发送方式",
+    "description": "默认歌曲发送方式",
     "type": "string",
     "default": "link",
-    "hint": "默认提供歌名与播放链接，无需签名服务；卡片需要QQ消息适配器。",
+    "hint": "普通调用沿用此方式；AI明确发卡片时可使用card。卡片需要QQ消息适配器。",
     "options": [
       "link",
       "card",
@@ -89,10 +89,10 @@
         ]
       },
       "send_mode": {
-        "description": "歌曲发送方式",
+        "description": "默认歌曲发送方式",
         "type": "string",
         "default": "link",
-        "hint": "默认提供歌名与播放链接，无需签名服务；卡片需要QQ消息适配器。",
+        "hint": "普通调用沿用此方式；AI明确发卡片时可使用card。卡片需要QQ消息适配器。",
         "options": [
           "link",
           "card",

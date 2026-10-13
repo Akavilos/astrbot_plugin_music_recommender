@@ -1,7 +1,7 @@
 name: astrbot_plugin_music_recommender
 display_name: 简单音乐推荐插件
 desc: 网易云与QQ音乐搜索、卡片分享及播放链接；支持搜歌指令和AI工具。
-version: 1.1.0
+version: 1.1.1
 author: Akavilos
 repo: https://github.com/Akavilos/astrbot_plugin_music_recommender
 astrbot_version: ">=4.24.0"
