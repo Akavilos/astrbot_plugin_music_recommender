@@ -1,187 +1,16 @@
 {
-  "basic": {
-    "description": "开始使用",
-    "type": "object",
-    "hint": "开启搜歌并选择音乐平台。没有音乐签名服务时，选择“歌名与播放链接”即可推荐歌曲；需要 QQ 卡片时再配置对应签名服务。保存并重载插件生效。",
-    "items": {
-      "enable_tool": {
-        "description": "启用搜歌功能",
-        "type": "bool",
-        "default": true,
-        "hint": "允许 AI 调用音乐搜索工具。关闭后不执行歌曲搜索；修改后保存并重载插件生效。"
-      },
-      "music_source": {
-        "description": "搜索音乐的平台",
-        "type": "string",
-        "default": "netease",
-        "options": [
-          "netease",
-          "qqmusic"
-        ],
-        "labels": [
-          "网易云音乐",
-          "QQ音乐"
-        ],
-        "hint": "选择网易云音乐或 QQ 音乐，用于搜索歌名、歌手和关键词。"
-      },
-      "send_mode": {
-        "description": "歌曲推荐的发送方式",
-        "type": "string",
-        "default": "card",
-        "options": [
-          "card",
-          "ark",
-          "card_api",
-          "link"
-        ],
-        "labels": [
-          "音乐卡片（机器人签名服务）",
-          "本地音乐卡片（实验）",
-          "音乐卡片（独立签名服务）",
-          "歌名与播放链接"
-        ],
-        "hint": "无需签名服务时可选择“歌名与播放链接”。机器人签名卡片需要在 NapCat 配置音乐签名服务；独立签名卡片使用下方服务地址和密钥。本地卡片属于实验方式，可能被 QQ 拒绝。保存并重载插件生效。"
-      },
-      "default_limit": {
-        "description": "默认搜索歌曲数",
-        "type": "int",
-        "default": 3,
-        "slider": {
-          "min": 1,
-          "max": 8,
-          "step": 1
-        },
-        "hint": "未指定数量时，搜索工具默认提供多少首歌供 AI 选择。实际数量还受搜索上限限制。"
-      },
-      "card_count": {
-        "description": "每次最多发送的卡片数",
-        "type": "int",
-        "default": 1,
-        "slider": {
-          "min": 1,
-          "max": 3,
-          "step": 1
-        },
-        "hint": "仅在卡片模式中生效。默认 1 张，避免一次发送太多卡片；不会限制链接文本中的候选歌曲数。"
-      }
-    }
-  },
-  "signing": {
-    "description": "独立签名卡片",
-    "type": "object",
-    "hint": "仅在发送方式选择“音乐卡片（独立签名服务）”时需要填写。机器人签名卡片的服务地址在 NapCat 中配置。",
-    "items": {
-      "sign_api_url": {
-        "description": "独立签名服务地址",
-        "type": "string",
-        "default": "https://apii.xianyuw.cn/api/v1/qq-musicArk",
-        "hint": "仅用于“音乐卡片（独立签名服务）”。填写服务商提供的完整接口地址；其他发送方式不使用此项。"
-      },
-      "sign_api_key": {
-        "description": "独立签名服务密钥",
-        "type": "string",
-        "default": "",
-        "hint": "仅用于独立签名卡片，由服务商提供。服务地址或密钥缺失时无法使用此方式，会返回文字说明。页面隐藏密钥显示。",
-        "secret": true
-      },
-      "sign_api_format": {
-        "description": "签名服务格式参数（可选）",
-        "type": "string",
-        "default": "",
-        "hint": "通常留空，按所选平台自动使用 netease 或 qq。只有服务商要求不同参数时才填写。"
-      }
-    }
-  },
-  "display": {
-    "description": "歌名与播放链接",
-    "type": "object",
-    "hint": "只控制链接文本模式提供给 AI 的歌曲信息，最终文字由 AI 组织。",
-    "items": {
-      "show_album": {
-        "description": "提供专辑名称",
-        "type": "bool",
-        "default": true,
-        "hint": "仅用于歌名与播放链接模式，将专辑名提供给 AI 组织回复。"
-      },
-      "show_duration": {
-        "description": "提供歌曲时长",
-        "type": "bool",
-        "default": true,
-        "hint": "仅用于歌名与播放链接模式，提供分钟与秒格式的歌曲时长。"
-      },
-      "show_link": {
-        "description": "提供播放链接",
-        "type": "bool",
-        "default": true,
-        "hint": "仅用于歌名与播放链接模式。开启后提供音乐平台播放页面的链接，通常保持开启。"
-      }
-    }
-  },
-  "search": {
-    "description": "搜索等待与数量",
-    "type": "object",
-    "hint": "限制单次搜索的等待时间和候选数量。通常保留默认值。",
-    "items": {
-      "search_timeout": {
-        "description": "搜索最长等待（秒）",
-        "type": "int",
-        "default": 10,
-        "slider": {
-          "min": 3,
-          "max": 30,
-          "step": 1
-        },
-        "hint": "单次音乐搜索的最长等待时间。网络较慢时可适当增加，默认 10 秒。"
-      },
-      "max_results_hard_limit": {
-        "description": "一次搜索的歌曲数量上限",
-        "type": "int",
-        "default": 8,
-        "slider": {
-          "min": 3,
-          "max": 20,
-          "step": 1
-        },
-        "hint": "限制 AI 一次工具调用可以请求的歌曲数，避免返回过多候选内容。"
-      }
-    }
-  },
-  "local_card": {
-    "description": "本地卡片 · 实验设置",
-    "type": "object",
-    "hint": "无需签名服务，但 QQ 可能拒绝本地构造卡片。只有选择本地实验发送方式时才使用这一组。",
-    "items": {
-      "ark_token": {
-        "description": "本地卡片令牌（可选）",
-        "type": "string",
-        "default": "",
-        "hint": "仅用于本地实验卡片。留空自动生成；手动填写时使用 32 位小写十六进制字符。符合格式也不保证 QQ 接受该卡片。",
-        "secret": true
-      },
-      "ark_bizsrc": {
-        "description": "本地卡片来源标识",
-        "type": "string",
-        "default": "music_card",
-        "hint": "仅用于本地实验卡片。默认 music_card，通常不需要修改；此项不能替代有效签名。"
-      },
-      "ark_appid": {
-        "description": "本地卡片应用编号",
-        "type": "int",
-        "default": 100495085,
-        "hint": "仅用于本地实验卡片，默认 100495085。不了解对应 QQ 卡片应用时保留默认值。"
-      }
-    }
-  },
-  "_basic_section": {
-    "description": "旧版分隔标记",
-    "type": "text",
-    "invisible": true,
-    "hint": "仅保留旧配置兼容，不参与功能控制。"
+  "enable_tool": {
+    "description": "启用搜歌",
+    "type": "bool",
+    "default": true,
+    "hint": "同时控制搜歌指令和AI工具。",
+    "invisible": true
   },
   "music_source": {
     "description": "搜索音乐的平台",
     "type": "string",
     "default": "netease",
+    "hint": "选择网易云音乐或QQ音乐。",
     "options": [
       "netease",
       "qqmusic"
@@ -190,171 +19,283 @@
       "网易云音乐",
       "QQ音乐"
     ],
-    "hint": "选择网易云音乐或 QQ 音乐，用于搜索歌名、歌手和关键词。",
     "invisible": true
   },
   "send_mode": {
-    "description": "歌曲推荐的发送方式",
+    "description": "歌曲发送方式",
     "type": "string",
-    "default": "card",
+    "default": "link",
+    "hint": "默认提供歌名与播放链接，无需签名服务；卡片需要QQ消息适配器。",
     "options": [
+      "link",
       "card",
-      "ark",
       "card_api",
-      "link"
+      "custom"
     ],
     "labels": [
-      "音乐卡片（依赖 NapCat 签名服务）",
-      "音乐卡片（本地构造）",
-      "音乐卡片（第三方签名服务）",
-      "链接文本"
+      "歌名与播放链接",
+      "机器人签名音乐卡片",
+      "独立签名音乐卡片",
+      "标准自定义卡片（实验）"
     ],
-    "hint": "无需签名服务时可选择“歌名与播放链接”。机器人签名卡片需要在 NapCat 配置音乐签名服务；独立签名卡片使用下方服务地址和密钥。本地卡片属于实验方式，可能被 QQ 拒绝。保存并重载插件生效。",
+    "invisible": true
+  },
+  "default_limit": {
+    "description": "默认候选歌曲数",
+    "type": "int",
+    "default": 3,
+    "hint": "未指定数量时返回多少首歌。",
+    "slider": {
+      "min": 1,
+      "max": 20,
+      "step": 1
+    },
     "invisible": true
   },
   "card_count": {
     "description": "每次最多发送的卡片数",
     "type": "int",
     "default": 1,
+    "hint": "仅影响卡片，不限制搜索候选数量。",
     "slider": {
       "min": 1,
       "max": 3,
       "step": 1
     },
-    "hint": "仅在卡片模式中生效。默认 1 张，避免一次发送太多卡片；不会限制链接文本中的候选歌曲数。",
     "invisible": true
   },
-  "enable_tool": {
-    "description": "启用搜歌功能",
-    "type": "bool",
-    "default": true,
-    "hint": "允许 AI 调用音乐搜索工具。关闭后不执行歌曲搜索；修改后保存并重载插件生效。",
-    "invisible": true
-  },
-  "default_limit": {
-    "description": "默认搜索歌曲数",
-    "type": "int",
-    "default": 3,
-    "slider": {
-      "min": 1,
-      "max": 8,
-      "step": 1
-    },
-    "hint": "未指定数量时，搜索工具默认提供多少首歌供 AI 选择。实际数量还受搜索上限限制。",
-    "invisible": true
-  },
-  "_signapi_section": {
-    "description": "旧版分隔标记",
-    "type": "text",
-    "invisible": true,
-    "hint": "仅保留旧配置兼容，不参与功能控制。"
-  },
-  "sign_api_url": {
-    "description": "独立签名服务地址",
-    "type": "string",
-    "default": "https://apii.xianyuw.cn/api/v1/qq-musicArk",
-    "hint": "仅用于“音乐卡片（独立签名服务）”。填写服务商提供的完整接口地址；其他发送方式不使用此项。",
-    "invisible": true
-  },
-  "sign_api_key": {
-    "description": "独立签名服务密钥",
-    "type": "string",
-    "default": "",
-    "hint": "仅用于独立签名卡片，由服务商提供。服务地址或密钥缺失时无法使用此方式，会返回文字说明。页面隐藏密钥显示。",
-    "invisible": true,
-    "secret": true
-  },
-  "sign_api_format": {
-    "description": "签名服务格式参数（可选）",
-    "type": "string",
-    "default": "",
-    "hint": "通常留空，按所选平台自动使用 netease 或 qq。只有服务商要求不同参数时才填写。",
-    "invisible": true
-  },
-  "_ark_section": {
-    "description": "旧版分隔标记",
-    "type": "text",
-    "invisible": true,
-    "hint": "仅保留旧配置兼容，不参与功能控制。"
-  },
-  "ark_token": {
-    "description": "本地卡片令牌（可选）",
-    "type": "string",
-    "default": "",
-    "hint": "仅用于本地实验卡片。留空自动生成；手动填写时使用 32 位小写十六进制字符。符合格式也不保证 QQ 接受该卡片。",
-    "invisible": true,
-    "secret": true
-  },
-  "ark_bizsrc": {
-    "description": "本地卡片来源标识",
-    "type": "string",
-    "default": "music_card",
-    "hint": "仅用于本地实验卡片。默认 music_card，通常不需要修改；此项不能替代有效签名。",
-    "invisible": true
-  },
-  "ark_appid": {
-    "description": "本地卡片应用编号",
-    "type": "int",
-    "default": 100495085,
-    "hint": "仅用于本地实验卡片，默认 100495085。不了解对应 QQ 卡片应用时保留默认值。",
-    "invisible": true
-  },
-  "_display_section": {
-    "description": "旧版分隔标记",
-    "type": "text",
-    "invisible": true,
-    "hint": "仅保留旧配置兼容，不参与功能控制。"
+  "basic": {
+    "description": "开始使用",
+    "type": "object",
+    "items": {
+      "enable_tool": {
+        "description": "启用搜歌",
+        "type": "bool",
+        "default": true,
+        "hint": "同时控制搜歌指令和AI工具。"
+      },
+      "music_source": {
+        "description": "搜索音乐的平台",
+        "type": "string",
+        "default": "netease",
+        "hint": "选择网易云音乐或QQ音乐。",
+        "options": [
+          "netease",
+          "qqmusic"
+        ],
+        "labels": [
+          "网易云音乐",
+          "QQ音乐"
+        ]
+      },
+      "send_mode": {
+        "description": "歌曲发送方式",
+        "type": "string",
+        "default": "link",
+        "hint": "默认提供歌名与播放链接，无需签名服务；卡片需要QQ消息适配器。",
+        "options": [
+          "link",
+          "card",
+          "card_api",
+          "custom"
+        ],
+        "labels": [
+          "歌名与播放链接",
+          "机器人签名音乐卡片",
+          "独立签名音乐卡片",
+          "标准自定义卡片（实验）"
+        ]
+      },
+      "default_limit": {
+        "description": "默认候选歌曲数",
+        "type": "int",
+        "default": 3,
+        "hint": "未指定数量时返回多少首歌。",
+        "slider": {
+          "min": 1,
+          "max": 20,
+          "step": 1
+        }
+      },
+      "card_count": {
+        "description": "每次最多发送的卡片数",
+        "type": "int",
+        "default": 1,
+        "hint": "仅影响卡片，不限制搜索候选数量。",
+        "slider": {
+          "min": 1,
+          "max": 3,
+          "step": 1
+        }
+      }
+    }
   },
   "show_album": {
-    "description": "提供专辑名称",
+    "description": "显示专辑",
     "type": "bool",
     "default": true,
-    "hint": "仅用于歌名与播放链接模式，将专辑名提供给 AI 组织回复。",
+    "hint": "返回歌曲所属专辑。",
     "invisible": true
   },
   "show_duration": {
-    "description": "提供歌曲时长",
+    "description": "显示时长",
     "type": "bool",
     "default": true,
-    "hint": "仅用于歌名与播放链接模式，提供分钟与秒格式的歌曲时长。",
+    "hint": "返回分钟与秒格式的时长。",
     "invisible": true
   },
   "show_link": {
-    "description": "提供播放链接",
+    "description": "显示播放链接",
     "type": "bool",
     "default": true,
-    "hint": "仅用于歌名与播放链接模式。开启后提供音乐平台播放页面的链接，通常保持开启。",
+    "hint": "通常保持开启，卡片不可用时也便于打开歌曲页面。",
     "invisible": true
   },
-  "_search_section": {
-    "description": "旧版分隔标记",
-    "type": "text",
-    "invisible": true,
-    "hint": "仅保留旧配置兼容，不参与功能控制。"
+  "display": {
+    "description": "歌曲信息",
+    "type": "object",
+    "items": {
+      "show_album": {
+        "description": "显示专辑",
+        "type": "bool",
+        "default": true,
+        "hint": "返回歌曲所属专辑。"
+      },
+      "show_duration": {
+        "description": "显示时长",
+        "type": "bool",
+        "default": true,
+        "hint": "返回分钟与秒格式的时长。"
+      },
+      "show_link": {
+        "description": "显示播放链接",
+        "type": "bool",
+        "default": true,
+        "hint": "通常保持开启，卡片不可用时也便于打开歌曲页面。"
+      }
+    }
   },
   "search_timeout": {
-    "description": "搜索最长等待（秒）",
+    "description": "请求最长等待（秒）",
     "type": "int",
     "default": 10,
+    "hint": "单次音乐接口请求的最长等待。",
     "slider": {
       "min": 3,
       "max": 30,
       "step": 1
     },
-    "hint": "单次音乐搜索的最长等待时间。网络较慢时可适当增加，默认 10 秒。",
     "invisible": true
   },
   "max_results_hard_limit": {
-    "description": "一次搜索的歌曲数量上限",
+    "description": "候选歌曲数量上限",
     "type": "int",
     "default": 8,
+    "hint": "限制一次调用能请求的歌曲数。",
     "slider": {
-      "min": 3,
+      "min": 1,
       "max": 20,
       "step": 1
     },
-    "hint": "限制 AI 一次工具调用可以请求的歌曲数，避免返回过多候选内容。",
     "invisible": true
+  },
+  "cache_seconds": {
+    "description": "相同搜索缓存（秒）",
+    "type": "int",
+    "default": 120,
+    "hint": "缓存只在本实例内存中；0关闭缓存，重启后清空。",
+    "slider": {
+      "min": 0,
+      "max": 600,
+      "step": 1
+    },
+    "invisible": true
+  },
+  "search": {
+    "description": "搜索与缓存",
+    "type": "object",
+    "items": {
+      "search_timeout": {
+        "description": "请求最长等待（秒）",
+        "type": "int",
+        "default": 10,
+        "hint": "单次音乐接口请求的最长等待。",
+        "slider": {
+          "min": 3,
+          "max": 30,
+          "step": 1
+        }
+      },
+      "max_results_hard_limit": {
+        "description": "候选歌曲数量上限",
+        "type": "int",
+        "default": 8,
+        "hint": "限制一次调用能请求的歌曲数。",
+        "slider": {
+          "min": 1,
+          "max": 20,
+          "step": 1
+        }
+      },
+      "cache_seconds": {
+        "description": "相同搜索缓存（秒）",
+        "type": "int",
+        "default": 120,
+        "hint": "缓存只在本实例内存中；0关闭缓存，重启后清空。",
+        "slider": {
+          "min": 0,
+          "max": 600,
+          "step": 1
+        }
+      }
+    }
+  },
+  "sign_api_url": {
+    "description": "签名服务HTTPS地址",
+    "type": "string",
+    "default": "",
+    "hint": "只在独立签名卡片方式下使用，没有内置服务商。",
+    "invisible": true
+  },
+  "sign_api_key": {
+    "description": "签名服务密钥",
+    "type": "string",
+    "default": "",
+    "hint": "由你使用的签名服务提供。",
+    "secret": true,
+    "invisible": true
+  },
+  "sign_api_format": {
+    "description": "服务格式参数（可选）",
+    "type": "string",
+    "default": "",
+    "hint": "通常留空，自动使用netease或qq。",
+    "invisible": true
+  },
+  "signing": {
+    "description": "独立签名服务",
+    "type": "object",
+    "items": {
+      "sign_api_url": {
+        "description": "签名服务HTTPS地址",
+        "type": "string",
+        "default": "",
+        "hint": "只在独立签名卡片方式下使用，没有内置服务商。"
+      },
+      "sign_api_key": {
+        "description": "签名服务密钥",
+        "type": "string",
+        "default": "",
+        "hint": "由你使用的签名服务提供。",
+        "secret": true
+      },
+      "sign_api_format": {
+        "description": "服务格式参数（可选）",
+        "type": "string",
+        "default": "",
+        "hint": "通常留空，自动使用netease或qq。"
+      }
+    }
   },
   "settings_layout_version": {
     "description": "配置布局版本",
